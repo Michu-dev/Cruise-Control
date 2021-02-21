@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tempomat</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.css" type="text/css" />
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-2.2.3.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <p class="logo">Podstawy Automatyki</p>
+            <div class="navigation">
+                <ul>
+                    <li><a href="#projects">Projekt</a></li>
+                    <li><a href="#graph">Wykresy</a></li>
+                    <li><a href="https://github.com/filipciesielski7/CruiseControl">Pobierz kod</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <section class="intro">
+        <div class="sentence">
+            <div class="without-photo">
+                <p class="intro-sentence">
+                    Projekt <span class="cruise-control">tempomatu</span> regulującego prędkość pojazdu
+                </p>
+                <p class="description">
+                    Wykonany przez nas projekt jest tempomatem regulującym prędkość pojazdu, na podstawie zadanej przez
+                    uzytkownika porządanej prędkości poruszania się. Wielkość przyspieszenia oraz czas w jakim pojazd
+                    uzyska
+                    zadaną prędkość są zależne od siły oporu skierowanej przeciwnie do ruchu naszego obiektu czy
+                    nachylenia terenu
+                    po którym się porusza.
+                </p>
+            </div>
+            <div class="photo">
+                <img class="car" src="{{ url_for('static',filename='pictures/car.jpg') }}" alt="" />
+            </div>
+        </div>
+    </section>
+
+    <section class="projects" id="projects">
+        <div class="projects-box">
+            <p class="projects-intro">Sterowanie pojazdem</p>
+            <div class="container">
+                <div class="card">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <div class="content">
+                        <h2>V</h2>
+                        <h3>Docelowa prędkość</h3>
+                        <p>
+                            <label for="new-speed">Wprowadź docelową prędkość z jaką chcesz się poruszać [m/s]:</label>
+                        </p>
+                        <form action="/send" method="POST">
+                            <div class="new-speed">
+                                <input type="number" id="new-speed" name="new-speed1" min="1" max="250" value="0">
+                            </div>
+                            <!-- </form> -->
+                    </div>
+
+                </div>
+                <div class="card">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                    <div class="content">
+                        <h2>K</h2>
+                        <h3>Nastawy</h3>
+                        <p>
+                            <label for="new-speed">Wprowadź nastawy regulatora PID</label>
+                        </p>
+                        <!-- <form action="/send" method="POST"> -->
+                        <div class="new-speed2">
+
+                            <div class="nastawy">
+                                <p>Kp:
+                                    <input type="number" id="new-kp" name="new-kp" min="0" max="1" value="0.0015"
+                                        step="0.0001">
+                                </p>
+                            </div>
+
+                            <div class="nastawy">
+                                <p>TI:
+                                    <input type="number" id="ki" name="ki" min="0" max="1" value="0.05" step="0.01">
+                                </p>
+                            </div>
+
+                            <div class="nastawy">
+                                <p>Td:
+                                    <input type="number" id="kd" name="kd" min="0" max="1" value="0.05" step="0.01">
+                                </p>
+                            </div>
+
+                        </div>
+                        <!-- </form> -->
+                    </div>
+
+                </div>
+                <div class="card">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                    <div class="content">
+                        <h2>°</h2>
+                        <h3>Nachylenie terenu oraz opory powietrza</h3>
+                        <p>
+                            są wartościami dobieranymi losowo
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="card">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                    <div class="content result">
+                        <h2>V</h2>
+                        <h3>Aktualna prędkość, nachylenie terenu</h3>
+                        <p>
+                            Aktualna prędkość z jaką porusza się pojazd oraz nachylenie terenu po którym jedzie
+                        </p>
+                        <div class="speed2">
+                            {{ speed }} m/s
+                        </div>
+                        <div class="speed2">
+                            {{ angle }} °
+                        </div>
+
+                        {%if b == 1 %}
+                        <p>Kierunek nachylenia: <i class="arrow up"></i></p>
+                        {% elif b == -1 %}
+                        <p>Kierunek nachylenia: <i class="arrow down"></i></p>
+                        {% else %}
+                        <p>Kierunek nachylenia: </p>
+                        {% endif %}
+                        <!-- <form action="/send" method="POST"> -->
+                        <input type="submit" value="Zaktualizuj" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="graph" id="graph">
+        <div class="projects-box">
+            <div class="text" id="wykresy">
+                <p class="graph-intro">Wykresy</p>
+                <div class="graph-base">
+                    <div class="graph1">
+                        {% block wykresy %}
+                        {% for plot in plots %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="graph-base">
+                    <div class="graph2">
+                        {% block wykres1 %}
+                        {% for plot in plots1 %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="graph-base">
+                    <div class="graph3">
+                        {% block wykres2 %}
+                        {% for plot in plots2 %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="graph-base">
+                    <div class="graph3">
+                        {% block wykres3 %}
+                        {% for plot in plots3 %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="graph-base">
+                    <div class="graph4">
+                        {% block wykres4 %}
+                        {% for plot in plots4 %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="graph-base">
+                    <div class="graph5">
+                        {% block wykres5 %}
+                        {% for plot in plots5 %}
+                        {% for part in plot %}
+                        {{part | safe}}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="buttom_header">
+        <div class="text-buttom-header">
+            <span></span>
+            <span>
+                <a href="#">Strona główna</a>
+                <a href="mailto:filip.ciesielski@student.put.poznan.pl">Kontakt</a>
+            </span>
+        </div>
+    </div>
+</body>
+
+</html>

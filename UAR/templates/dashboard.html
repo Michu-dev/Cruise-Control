@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block wykresy %}
+{% for plot in plots %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block wykres1 %}
+{% for plot in plots1 %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block wykres2 %}
+{% for plot in plots2 %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block wykres3 %}
+{% for plot in plots3 %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block wykres4 %}
+{% for plot in plots4 %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block wykres5 %}
+{% for plot in plots5 %}
+{% for part in plot %}
+{{part | safe}}
+{% endfor %}
+{% endfor %}
+{% endblock %}
